@@ -1,0 +1,12 @@
+## data saved to disk
+*/data/confirmed.csv
+*/data/recovered.csv
+*/data/deaths.csv
+
+## acess token file
+*/data/access_tokens.csv
+
+## system/tmp files
+**.DS_Store
+**/.Rproj.user/*
+**.Rhistory
