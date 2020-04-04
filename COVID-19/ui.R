@@ -4,6 +4,7 @@
 library(shiny)
 library(shinydashboard)
 library(dashboardthemes)
+library(shinycssloaders)
 library(highcharter)
 ## -===================================================================================================- ##
 ## -========================================== DEFINE UI ==============================================- ##
@@ -39,7 +40,7 @@ body <- dashboardBody(
               tags$script(src = "https://code.highcharts.com/mapdata/custom/world-robinson-highres.js"),
               withMathJax(),
               column(width =12,
-                       htmlOutput('wiki_summary'),
+                       htmlOutput('wiki_summary') %>% withSpinner(),
                      p(class = "text-info",
                        paste(
                              "All data is sourced from the Johns Hopkins University Center for Systems Science and Engineering via https://github.com/CSSEGISandData/COVID-19/")
