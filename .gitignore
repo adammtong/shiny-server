@@ -2,6 +2,7 @@
 */data/confirmed.csv
 */data/recovered.csv
 */data/deaths.csv
+*/data/github_details.csv
 
 ## acess token file
 */data/access_tokens.csv

@@ -26,7 +26,6 @@ local_confirmed <- paste0(local_data_path,'confirmed.csv')
 local_recovered <- paste0(local_data_path,'recovered.csv')
 local_deaths <-  paste0(local_data_path,'deaths.csv')
 
-
 source_data_path <- 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/'
 
 ## news api details 
@@ -48,8 +47,6 @@ wiki_summary_val <- wiki_path %>%
 ## -===================================================================================================- ##
 
 ## see if source data repo has been updated - use GitHub v3 rest API
-## GitHub details of data currently being used
-current_github_details <- read.csv(paste0(local_data_path,'github_details.csv'), stringsAsFactors = FALSE) 
 ## send GET request
 request <- GET(url = github_api_path)
 
@@ -63,10 +60,19 @@ github_details <- fromJSON(response, flatten = TRUE) %>%
                      'time_series_covid19_recovered_global.csv')) %>% 
   select(name,sha) 
 
+## GitHub details of data currently being used
+if(file.exists(paste0(local_data_path,'github_details.csv'))){
+  current_github_details <- read.csv(paste0(local_data_path,'github_details.csv'), stringsAsFactors = FALSE)   
+  download_data <- all.equal(current_github_details,github_details) != TRUE | 
+    !all(file.exists(local_confirmed,local_recovered, local_deaths))
+} else {
+  download_data <- TRUE
+}
+
 ## check if hashes for all of the files are not equal or if local files don't exists - if so, fetch new data
-if(all.equal(current_github_details,github_details) != TRUE | !all(file.exists(local_confirmed,local_recovered, local_deaths))){
+if(download_data){
   print('data has changed - fetching latest')
-   confirmed_csv <- read_csv(paste0(source_data_path,"time_series_covid19_confirmed_global.csv"), 
+  confirmed_csv <- read_csv(paste0(source_data_path,"time_series_covid19_confirmed_global.csv"), 
                             col_names = TRUE) %>% mutate(type = "Confirmed")
    
   recovered_csv <- read_csv(paste0(source_data_path,"time_series_covid19_recovered_global.csv"),
